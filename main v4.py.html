@@ -1,0 +1,200 @@
+<html>
+<head>
+<title>main v4.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d33682; font-weight: bold;}
+.s1 { color: #586e75;}
+.s2 { color: #586e75;}
+.s3 { color: #008080; font-weight: bold;}
+.s4 { color: #00a036; font-style: italic;}
+.s5 { color: #0012c4; font-weight: bold;}
+.s6 { color: #6c71c4;}
+</style>
+</head>
+<body bgcolor="#fcf5e2">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main v4.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">telebot</span>
+<span class="s0">from </span><span class="s1">telebot </span><span class="s0">import </span><span class="s1">types</span>
+<span class="s0">import </span><span class="s1">requests</span>
+<span class="s0">from </span><span class="s1">bs4 </span><span class="s0">import </span><span class="s1">BeautifulSoup</span>
+
+<span class="s1">bot </span><span class="s2">= </span><span class="s1">telebot</span><span class="s2">.</span><span class="s1">TeleBot</span><span class="s2">(</span><span class="s3">'1461155136:AAEvea1W9Gk7f7fp1JX0y94QDgLqqATfPxs'</span><span class="s2">)</span>
+
+<span class="s0">def </span><span class="s1">holidays</span><span class="s2">(</span><span class="s1">holiday_date_text</span><span class="s2">, </span><span class="s1">holiday_name_text</span><span class="s2">):  </span><span class="s4"># прописываем парсинг в начале, чтобы не заходить на сайт при каждом новом запросе от пользователя</span>
+    <span class="s1">url </span><span class="s2">= </span><span class="s3">'https://www.timeanddate.com/holidays/un/2021'</span>
+    <span class="s1">page </span><span class="s2">= </span><span class="s1">requests</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">url</span><span class="s2">).</span><span class="s1">text</span>
+    <span class="s1">soup </span><span class="s2">= </span><span class="s1">BeautifulSoup</span><span class="s2">(</span><span class="s1">page</span><span class="s2">, </span><span class="s3">'lxml'</span><span class="s2">)</span>
+    <span class="s1">table </span><span class="s2">= </span><span class="s1">soup</span><span class="s2">.</span><span class="s1">find_all</span><span class="s2">(</span><span class="s3">'table'</span><span class="s2">)[</span><span class="s5">0</span><span class="s2">]</span>
+    <span class="s1">holiday_name </span><span class="s2">= </span><span class="s1">table</span><span class="s2">.</span><span class="s1">find_all</span><span class="s2">(</span><span class="s3">'a'</span><span class="s2">)</span>
+
+    <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">len</span><span class="s2">(</span><span class="s1">holiday_name</span><span class="s2">)):</span>
+        <span class="s1">holiday_name_text</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">holiday_name</span><span class="s2">[</span><span class="s1">i</span><span class="s2">].</span><span class="s1">get_text</span><span class="s2">())</span>
+
+    <span class="s1">holiday_date </span><span class="s2">= </span><span class="s1">table</span><span class="s2">.</span><span class="s1">find_all</span><span class="s2">(</span><span class="s3">'th'</span><span class="s2">)</span>
+    <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s5">3</span><span class="s2">, </span><span class="s1">len</span><span class="s2">(</span><span class="s1">holiday_date</span><span class="s2">)):</span>
+        <span class="s1">holiday_date_text</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">holiday_date</span><span class="s2">[</span><span class="s1">i</span><span class="s2">].</span><span class="s1">get_text</span><span class="s2">())</span>
+    <span class="s0">return </span><span class="s1">holiday_name_text</span><span class="s2">, </span><span class="s1">holiday_date_text</span>
+
+
+<span class="s1">holiday_name_text </span><span class="s2">= []</span>
+<span class="s1">holiday_date_text </span><span class="s2">= []</span>
+<span class="s1">holidays</span><span class="s2">(</span><span class="s1">holiday_date_text</span><span class="s2">, </span><span class="s1">holiday_name_text</span><span class="s2">)</span>
+
+<span class="s1">bot </span><span class="s2">= </span><span class="s1">telebot</span><span class="s2">.</span><span class="s1">TeleBot</span><span class="s2">(</span><span class="s3">'1461155136:AAEvea1W9Gk7f7fp1JX0y94QDgLqqATfPxs'</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">bot</span><span class="s2">.</span><span class="s1">message_handler</span><span class="s2">(</span><span class="s1">commands</span><span class="s2">=[</span><span class="s3">&quot;start&quot;</span><span class="s2">])  </span><span class="s4"># прописываем ответ на команду /start</span>
+<span class="s0">def </span><span class="s1">start_reply</span><span class="s2">(</span><span class="s1">message</span><span class="s2">):</span>
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                     <span class="s3">'Привет! Этот бот может проверить есть ли какой-нибудь интернациональный '</span>
+                     <span class="s3">'прадзник в определенную дату. Чтобы начать проверку нажми &quot;/check&quot;. Если хочешь узнать откуда этот бот черпает информацию, нажми  &quot;/info&quot;'</span><span class="s2">)</span>
+
+<span class="s2">@</span><span class="s1">bot</span><span class="s2">.</span><span class="s1">message_handler</span><span class="s2">(</span><span class="s1">commands</span><span class="s2">=[</span><span class="s3">&quot;info&quot;</span><span class="s2">]) </span><span class="s4"># прописываем ответ на команду /info</span>
+<span class="s0">def </span><span class="s1">info_reply</span><span class="s2">(</span><span class="s1">message</span><span class="s2">):</span>
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                     <span class="s3">'Наш главный ресурс - это сайт timeanddate.com .'</span>
+                     <span class="s3">' Пока что мы не используем другие ресурсы, но можем начать это делать в ближайшем будушем, так что следите за обновлениями бота!'</span><span class="s2">)</span>
+
+<span class="s1">date_number </span><span class="s2">= </span><span class="s3">''</span>
+<span class="s4"># задаем пустые значения, которые позже будем зполнять ответами на наши сообщения</span>
+<span class="s1">date_month </span><span class="s2">= </span><span class="s3">''</span>
+
+<span class="s1">result </span><span class="s2">= </span><span class="s3">''</span>
+<span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">''</span>
+
+
+
+
+<span class="s2">@</span><span class="s1">bot</span><span class="s2">.</span><span class="s1">message_handler</span><span class="s2">(</span><span class="s1">content_types</span><span class="s2">=[</span><span class="s3">'text'</span><span class="s2">])</span>
+<span class="s0">def </span><span class="s1">handling_date</span><span class="s2">(</span><span class="s1">message</span><span class="s2">):</span>
+
+    <span class="s0">if </span><span class="s1">message</span><span class="s2">.</span><span class="s1">text </span><span class="s2">== </span><span class="s3">'/check'</span><span class="s2">: </span><span class="s4"># прописываем ответ на команду /check</span>
+        <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                         <span class="s3">'Укажи число, которое хочешь проверить.'</span><span class="s2">)</span>
+
+        <span class="s1">bot</span><span class="s2">.</span><span class="s1">register_next_step_handler</span><span class="s2">(</span><span class="s1">message</span><span class="s2">, </span><span class="s1">get_date_number</span><span class="s2">)</span>
+    <span class="s0">else</span><span class="s2">:</span>
+        <span class="s0">pass</span>
+
+
+<span class="s0">def </span><span class="s1">get_date_number</span><span class="s2">(</span><span class="s1">message</span><span class="s2">): </span><span class="s4">#функция для сохранения ответа числа, которое вводит пользователь</span>
+    <span class="s0">global </span><span class="s1">date_number</span>
+    <span class="s1">date_number </span><span class="s2">= </span><span class="s1">message</span><span class="s2">.</span><span class="s1">text </span><span class="s4"># сохраняем ввод</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s1">message</span><span class="s2">.</span><span class="s1">text </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">text</span><span class="s2">)</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">int</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">text</span><span class="s2">) &gt; </span><span class="s5">0</span><span class="s2">) </span><span class="s0">and </span><span class="s2">(</span><span class="s1">int</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">text </span><span class="s2">&lt; </span><span class="s5">32</span><span class="s2">)):</span>
+            <span class="s0">pass</span>
+
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                             <span class="s3">'Кажется числа, что ты ввел не соответствуют формату! Число должно быть от 1 до 31. Попробуй еще раз, нажав /check '</span><span class="s2">)</span>
+            <span class="s0">return None</span>
+
+    <span class="s0">except </span><span class="s1">ValueError</span><span class="s2">:</span>
+        <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                         <span class="s3">'Кажется то, что ты ввел не соответствует формату! Ты должен ввести число месяца. Попробуй еще раз, нажав /check '</span><span class="s2">)</span>
+        <span class="s0">return None</span>
+
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                     <span class="s3">'Отлично! Теперь напиши три первых буквы месяца проверяемой даты. '</span><span class="s2">)</span>
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">register_next_step_handler</span><span class="s2">(</span><span class="s1">message</span><span class="s2">, </span><span class="s1">get_date_month</span><span class="s2">)</span>
+    <span class="s1">message</span><span class="s2">.</span><span class="s1">text </span><span class="s2">== </span><span class="s1">message</span><span class="s2">.</span><span class="s1">text</span><span class="s2">.</span><span class="s1">lower</span><span class="s2">()</span>
+
+
+
+
+<span class="s0">def </span><span class="s1">get_date_month</span><span class="s2">(</span><span class="s1">message</span><span class="s2">): </span><span class="s4">#функция для сохранения ответа месяца, которое вводит пользователь</span>
+    <span class="s0">global </span><span class="s1">date_month</span>
+    <span class="s1">date_month </span><span class="s2">= </span><span class="s1">message</span><span class="s2">.</span><span class="s1">text</span>
+
+    <span class="s0">if </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'янв'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'фев'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'мар'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'апр'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'май'</span><span class="s2">)</span><span class="s1">\</span>
+            <span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'июн'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'июл'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'авг'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'сен'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'окт'</span><span class="s2">)</span><span class="s1">\</span>
+            <span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'ноя'</span><span class="s2">) </span><span class="s0">or </span><span class="s2">(</span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'дек'</span><span class="s2">):</span>
+        <span class="s0">pass</span>
+
+    <span class="s0">else</span><span class="s2">:</span>
+        <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                         <span class="s3">'Формат месяца, что ты ввел, не подходит. Не забывай, нужно ввести три первых буквы месяца. Попробуй начать заново - для этого нажми /check '</span><span class="s2">)</span>
+        <span class="s0">return None</span>
+
+    <span class="s4"># теперь делаем финальную проверку перед поиском информации.</span>
+    <span class="s4"># Переспрашиваем все ли правильно пользователь ввел.</span>
+    <span class="s1">keyboard </span><span class="s2">= </span><span class="s1">types</span><span class="s2">.</span><span class="s1">InlineKeyboardMarkup</span><span class="s2">()  </span><span class="s4"># добавляем в код нашу клавиатуру</span>
+    <span class="s1">key_yes </span><span class="s2">= </span><span class="s1">types</span><span class="s2">.</span><span class="s1">InlineKeyboardButton</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s3">'Да'</span><span class="s2">, </span><span class="s1">callback_data</span><span class="s2">=</span><span class="s3">'yes'</span><span class="s2">)  </span><span class="s4"># создаем кнопку «Да»</span>
+    <span class="s1">keyboard</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">key_yes</span><span class="s2">)  </span><span class="s4"># добавляем кнопку в наш чат</span>
+    <span class="s1">key_no </span><span class="s2">= </span><span class="s1">types</span><span class="s2">.</span><span class="s1">InlineKeyboardButton</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s3">'Нет'</span><span class="s2">, </span><span class="s1">callback_data</span><span class="s2">=</span><span class="s3">'no'</span><span class="s2">)</span>
+    <span class="s1">keyboard</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">key_no</span><span class="s2">)</span>
+    <span class="s1">full_date </span><span class="s2">= </span><span class="s1">date_number </span><span class="s2">+ </span><span class="s3">' ' </span><span class="s2">+ </span><span class="s1">date_month</span>
+
+    <span class="s0">if </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'янв'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Января'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'фев'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Февраля'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'мар'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Марта'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'апр'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Апреля'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'май'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Мая'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'июн'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Июня'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'июл'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Июля'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'авг'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Августа'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'сен'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Сентября'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'окт'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Октбяря'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'ноя'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Ноября'</span>
+    <span class="s0">elif </span><span class="s1">date_month </span><span class="s2">== </span><span class="s3">'дек'</span><span class="s2">:</span>
+        <span class="s1">userfriendly_date_month </span><span class="s2">= </span><span class="s3">'Декабря'</span>
+
+    <span class="s1">userfriendly_full_date </span><span class="s2">= </span><span class="s1">str</span><span class="s2">(</span><span class="s1">date_number</span><span class="s2">) + </span><span class="s3">' ' </span><span class="s2">+ </span><span class="s1">str</span><span class="s2">(</span><span class="s1">userfriendly_date_month</span><span class="s2">)</span>
+    <span class="s1">question </span><span class="s2">= </span><span class="s3">f'Финальная проверка. Ты хочешь узнать какие праздники есть по данной дате: ' </span><span class="s1">\</span>
+               <span class="s3">f'</span><span class="s6">{</span><span class="s1">userfriendly_full_date</span><span class="s6">} </span><span class="s3">, все правильно?'  </span><span class="s4">#задаем вопрос, чтобы пользователь подтвердил свой запрос</span>
+
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">from_user</span><span class="s2">.</span><span class="s1">id</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s1">question</span><span class="s2">, </span><span class="s1">reply_markup</span><span class="s2">=</span><span class="s1">keyboard</span><span class="s2">)</span>
+
+    <span class="s2">@</span><span class="s1">bot</span><span class="s2">.</span><span class="s1">callback_query_handler</span><span class="s2">(</span><span class="s1">func</span><span class="s2">=</span><span class="s0">lambda </span><span class="s1">call</span><span class="s2">: </span><span class="s0">True</span><span class="s2">)  </span><span class="s4"># напишем код, чтобы при нажатии на кнопку хоть что-то происходило</span>
+    <span class="s0">def </span><span class="s1">callback_worker</span><span class="s2">(</span><span class="s1">call</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">call</span><span class="s2">.</span><span class="s1">data </span><span class="s2">== </span><span class="s3">&quot;yes&quot;</span><span class="s2">:</span>
+            <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">call</span><span class="s2">.</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                             <span class="s3">'Проверяю данную дату. Одну секунду. '</span><span class="s2">)</span>
+            <span class="s1">res </span><span class="s2">= </span><span class="s3">''</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">len</span><span class="s2">(</span><span class="s1">holiday_date_text</span><span class="s2">)):</span>
+                <span class="s0">if </span><span class="s1">holiday_date_text</span><span class="s2">[</span><span class="s1">j</span><span class="s2">] == </span><span class="s1">full_date</span><span class="s2">:</span>
+                    <span class="s1">res </span><span class="s2">= </span><span class="s1">holiday_name_text</span><span class="s2">[</span><span class="s1">j</span><span class="s2">]</span>
+
+
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">res</span>
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">str</span><span class="s2">(</span><span class="s1">result</span><span class="s2">)</span>
+
+            <span class="s0">if </span><span class="s1">res </span><span class="s2">== </span><span class="s3">''</span><span class="s2">:</span>
+                <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">call</span><span class="s2">.</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                                 <span class="s3">'Извини, я не нашел никакого праздника по указанной дате. Попробуй другую дату. Чтобы это сделать нажми /check'</span><span class="s2">)</span>
+            <span class="s0">else</span><span class="s2">:</span>
+                <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">call</span><span class="s2">.</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">, </span><span class="s3">f'</span><span class="s6">{</span><span class="s1">result</span><span class="s6">}</span><span class="s3">'</span><span class="s2">)</span>
+
+        <span class="s0">elif </span><span class="s1">call</span><span class="s2">.</span><span class="s1">data </span><span class="s2">== </span><span class="s3">&quot;no&quot;</span><span class="s2">:</span>
+            <span class="s1">bot</span><span class="s2">.</span><span class="s1">send_message</span><span class="s2">(</span><span class="s1">call</span><span class="s2">.</span><span class="s1">message</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                             <span class="s3">'О нет! Тебе придется вернуться в начало, чтобы назначить дату заново. Чтобы это сделать, нажми &quot;/check&quot;'</span><span class="s2">)</span>
+
+
+
+
+
+
+
+<span class="s0">if </span><span class="s1">__name__ </span><span class="s2">== </span><span class="s3">'__main__'</span><span class="s2">:</span>
+    <span class="s1">bot</span><span class="s2">.</span><span class="s1">infinity_polling</span><span class="s2">()</span>
+</pre>
+</body>
+</html>
