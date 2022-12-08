@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import requests
 from bs4 import BeautifulSoup
-
+ 
 bot = telebot.TeleBot('1461155136:AAEvea1W9Gk7f7fp1JX0y94QDgLqqATfPxs')
 
 def holidays(holiday_date_text, holiday_name_text):  # прописываем парсинг в начале, чтобы не заходить на сайт при каждом новом запросе от пользователя
